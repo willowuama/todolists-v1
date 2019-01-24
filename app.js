@@ -1,37 +1,51 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const date = require(__dirname + "/date.js");
 
+// Server Initialization
 const app = express();
 const port = 3000;
 
-var items = ["Buy Food", "Cook Food", "Eat Food"];
+// Global Variables
+const items = ["Buy Food", "Cook Food", "Eat Food"];
+const workItems = [];
 
+// Server Configuration
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
+// Render Home Page
 app.get("/", function(req, res) {
-  var today = new Date();
+  const day = date.getDate();
 
-  var options = {
-    weekday: "long",
-    day: "numeric",
-    month: "long"
-  };
-
-  var day = today.toLocaleDateString("en-US", options);
-
-  res.render("list", { kindOfDay: day, newListItem: items });
+  res.render("list", { listTitle: day, newListItem: items });
 });
 
+// Render About Page
+app.get("/about", function(req, res) {
+  res.render("about");
+});
+
+// Post/Accept New List Item
 app.post("/", function(req, res) {
-  var item = req.body.newItem;
+  const item = req.body.newItem;
 
-  items.push(item);
-
-  res.redirect("/");
-  console.log(item);
+  if (req.body.list === "Work") {
+    workItems.push(item);
+    res.redirect("/work");
+  } else {
+    items.push(item);
+    res.redirect("/");
+  }
 });
 
+// Render Work Page/List
+app.get("/work", function(req, res) {
+  res.render("list", { listTitle: "Work List", newListItem: workItems });
+});
+
+// Port/Server Listening
 app.listen(port, function() {
   console.log("Server started on port " + port);
 });
