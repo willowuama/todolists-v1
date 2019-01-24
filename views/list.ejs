@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>To Do List</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <h1><%= kindOfDay %></h1>
+
+    <ul>
+      <% for (i in newListItem) {%>
+      <li><%= newListItem[i] %></li>
+      <%} %>
+    </ul>
+
+    <form action="/" method="post">
+      <input type="text" name="newItem" />
+      <button type="submit" name="submit">Add</button>
+    </form>
+  </body>
+</html>
